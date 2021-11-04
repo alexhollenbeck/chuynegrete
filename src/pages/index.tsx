@@ -65,7 +65,7 @@ const IndexHeader = ({
   lead: { lead: string }
 }) => (
   <>
-    <RectangularImage src={mainImage.file.url} alt={mainImage.description} />
+    <RectangularImage src={mainImage.file.url} />
     <IndexHeaderWrapper>
       {!isSmall && (
         <IndexHeaderAvatar

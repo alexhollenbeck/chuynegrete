@@ -8,11 +8,9 @@ import { ResponsiveSectionWrapper } from '../components/partials/Section'
 import SEO from '../components/partials/SEO'
 import {
   Display,
-  LabelLarge,
   LabelXL,
   ParagraphLarge,
-  Title,
-  TitleSmall
+  Title
 } from '../components/Typography'
 import { PostList, RectangularImage } from '../pages'
 import { isLarge } from '../utilities/Breakpoints'
@@ -29,6 +27,7 @@ const PostSectionWrapper = styled(ResponsiveSectionWrapper)`
   }
   ${Title} {
     margin-top: 1rem;
+    margin-bottom: 2rem;
     font-weight: 400;
     color: ${Colors.gray70};
   }
