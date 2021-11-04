@@ -178,7 +178,7 @@ const IndexPage = ({ data }: { data: any }) => {
   return (
     <Layout>
       <SEO title='Remembering Chuy Negrete' />
-      <ResponsiveSectionWrapper>
+      <ResponsiveSectionWrapper paddingSmall='3rem 0 2rem'>
         <Container>
           <Grid container spacing={8}>
             <Grid item xs={12} sm={12} md={7} lg={7}>

@@ -43,6 +43,7 @@ const PostContent = styled.div`
     margin-left: auto;
     margin-right: auto;
     margin-top: 2rem;
+    max-width: 100%;
   }
   img {
     max-width: calc(100% - 4rem);
