@@ -1,7 +1,5 @@
 export const formatDate = (date: string) => {
-  const postDate = new Date(date)
-  const postDateFormatted = `${
-    postDate.getMonth() + 1
-  }/${postDate.getDate()}/${postDate.getFullYear()}`
+  const [month, day, year] = date.split('-')
+  const postDateFormatted = `${month}/${day}/${year}`
   return postDateFormatted
 }
