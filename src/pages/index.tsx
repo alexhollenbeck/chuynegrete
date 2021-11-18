@@ -9,10 +9,14 @@ import {
   Label,
   LabelLarge,
   LabelXL,
+  Lead,
   Paragraph,
+  StyledLink,
+  StyledLinkWrapper,
   Title,
   TitleLarge,
-  TitleSmall
+  TitleSmall,
+  TitleXL
 } from '../components/Typography'
 import { graphql, Link } from 'gatsby'
 import { Colors } from '../utilities/Colors'
@@ -32,65 +36,6 @@ export const RectangularImage = styled.div<{
   border-radius: 0.5rem;
 `
 
-const IndexHeaderAvatar = styled.img`
-  height: 200px;
-  width: 200px;
-  border-radius: 100px;
-`
-const IndexHeadline = styled.div`
-  ${TitleLarge}, ${Paragraph} {
-    margin-top: 1rem;
-  }
-  @media (min-width: ${Breakpoints.sm}px) {
-    margin-left: 2rem;
-  }
-`
-
-const IndexHeaderWrapper = styled.div`
-  display: flex;
-  margin-top: 2rem;
-`
-
-const IndexHeader = ({
-  mainImage,
-  secondaryImage,
-  title,
-  subtitle,
-  lead
-}: {
-  mainImage: { description: string; file: { url: string } }
-  secondaryImage: { description: string; file: { url: string } }
-  title: string
-  subtitle: string
-  lead: { lead: string }
-}) => (
-  <>
-    <RectangularImage src={mainImage.file.url} />
-    <IndexHeaderWrapper>
-      {!isSmall && (
-        <IndexHeaderAvatar
-          src={secondaryImage.file.url}
-          alt={secondaryImage.description}
-        />
-      )}
-      <IndexHeadline>
-        <Display>{title}</Display>
-        <TitleLarge as='h2'>{subtitle}</TitleLarge>
-        <Paragraph>{lead.lead}</Paragraph>
-      </IndexHeadline>
-    </IndexHeaderWrapper>
-  </>
-)
-
-const ArticleList = styled.ul``
-
-const ArticleWrapper = styled.li`
-  padding: 2rem 0;
-  &:not(:first-of-type) {
-    border-top: 1px solid ${Colors.gray30};
-  }
-`
-
 const Article = ({
   title,
   publication,
@@ -102,21 +47,73 @@ const Article = ({
   link: string
   thumbnailImage: { description: string; file: { url: string } }
 }) => (
-  <ArticleWrapper>
-    <a href={link} target='_blank' rel='noreferrer'>
-      <Grid container spacing={2}>
-        <Grid item xs={6} sm={6} md={6} lg={6}>
-          <RectangularImage src={thumbnailImage.file.url} />
-        </Grid>
-        <Grid item xs={6} sm={6} md={6} lg={6}>
-          <Label>{publication}</Label>
-          <TitleSmall color={Colors.primary} fontSizeMobile={0.875}>
-            {title}
-          </TitleSmall>
-        </Grid>
+  <a href={link} target='_blank' rel='noreferrer'>
+    <Grid container spacing={2}>
+      <Grid item xs={6} sm={6} md={6} lg={6}>
+        <RectangularImage src={thumbnailImage.file.url} />
       </Grid>
+      <Grid item xs={6} sm={6} md={6} lg={6}>
+        <Label>{publication}</Label>
+        <TitleSmall color={Colors.primary} fontSizeMobile={0.875}>
+          {title}
+        </TitleSmall>
+      </Grid>
+    </Grid>
+  </a>
+)
+const IndexHeadline = styled.div`
+  ${TitleLarge} {
+    margin-top: 1rem;
+  }
+`
+interface IPostPreview {
+  title: string
+  date: string
+  urlSlug: string
+  summary?: {
+    summary: string
+  }
+  featuredImage: {
+    file: {
+      url: string
+    }
+  }
+}
+const IndexHeaderWrapper = styled.div`
+  ${RectangularImage} {
+    margin-top: 2rem;
+  }
+  ${TitleXL}, ${Paragraph}, ${StyledLinkWrapper} {
+    display: block;
+    margin-top: 1rem;
+  }
+`
+const IndexHeader = ({
+  headline,
+  featuredPost
+}: {
+  headline: {
+    mainImage: { description: string; file: { url: string } }
+    title: string
+    subtitle: string
+    lead: { lead: string }
+  }
+  featuredPost: IPostPreview
+}) => (
+  <IndexHeaderWrapper>
+    <IndexHeadline>
+      <Display>{headline.title}</Display>
+      <TitleLarge as='h2'>{headline.subtitle}</TitleLarge>
+    </IndexHeadline>
+    <a href={`/posts/${featuredPost.urlSlug}`}>
+      <RectangularImage src={featuredPost.featuredImage.file.url} />
+      <TitleXL>{featuredPost.title}</TitleXL>
+      {featuredPost.summary && (
+        <Paragraph>{featuredPost.summary.summary}</Paragraph>
+      )}
+      <StyledLink color={Colors.primary}>Read more &rarr;</StyledLink>
     </a>
-  </ArticleWrapper>
+  </IndexHeaderWrapper>
 )
 
 const AllPostsSectionWrapper = styled(ResponsiveSectionWrapper)`
@@ -140,17 +137,8 @@ const PostCardWrapper = styled.div`
     }
   }
 `
-interface IPost {
-  title: string
-  date: string
-  urlSlug: string
-  featuredImage: {
-    file: {
-      url: string
-    }
-  }
-}
-export const PostCard = ({ post }: { post: IPost }) => {
+
+export const PostCard = ({ post }: { post: IPostPreview }) => {
   const { title, date, urlSlug, featuredImage } = post
   return (
     <PostCardWrapper>
@@ -162,7 +150,7 @@ export const PostCard = ({ post }: { post: IPost }) => {
     </PostCardWrapper>
   )
 }
-export const PostList = ({ posts }: { posts: IPost[] }) => (
+export const PostList = ({ posts }: { posts: IPostPreview[] }) => (
   <Grid container spacing={4}>
     {posts.map((post, index) => (
       <Grid item xs={12} sm={12} md={6} lg={4} key={`post-${index}`}>
@@ -171,8 +159,15 @@ export const PostList = ({ posts }: { posts: IPost[] }) => (
     ))}
   </Grid>
 )
+const ArticleListItem = styled.li`
+  padding: 2rem 0;
+  &:not(:first-of-type) {
+    border-top: 1px solid ${Colors.gray30};
+  }
+`
 const IndexPage = ({ data }: { data: any }) => {
   const headline = data.headline.edges[0].node
+  const featuredPost = data.featuredPost.edges[0].node
   const articles = data.articles.edges.map((edge) => edge.node)
   const posts = data.posts.edges.map((edge) => edge.node)
   return (
@@ -182,17 +177,17 @@ const IndexPage = ({ data }: { data: any }) => {
         <Container>
           <Grid container spacing={8}>
             <Grid item xs={12} sm={12} md={7} lg={7}>
-              <IndexHeader {...headline} />
+              <IndexHeader headline={headline} featuredPost={featuredPost} />
             </Grid>
             <Grid item xs={12} sm={12} md={5} lg={5}>
               <LabelLarge>Press</LabelLarge>
-              <ArticleList>
+              <ul>
                 {articles.map((article, index) => (
-                  <Article key={`article-${index}`} {...article}>
-                    {article.title}
-                  </Article>
+                  <ArticleListItem key={`article-${index}`}>
+                    <Article {...article}>{article.title}</Article>
+                  </ArticleListItem>
                 ))}
-              </ArticleList>
+              </ul>
             </Grid>
           </Grid>
         </Container>
@@ -221,15 +216,26 @@ export const query = graphql`
               url
             }
           }
-          secondaryImage {
-            description
-            file {
-              url
-            }
-          }
           subtitle
           lead {
             lead
+          }
+        }
+      }
+    }
+    featuredPost: allContentfulPost(filter: { featured: { eq: true } }) {
+      edges {
+        node {
+          title
+          summary {
+            summary
+          }
+          date(formatString: "MM-DD-YY")
+          urlSlug
+          featuredImage {
+            file {
+              url
+            }
           }
         }
       }
@@ -240,22 +246,6 @@ export const query = graphql`
           title
           date(formatString: "MM-DD-YY")
           urlSlug
-          body {
-            raw
-            references {
-              ... on ContentfulAsset {
-                id
-                file {
-                  url
-                }
-              }
-              ... on ContentfulVideo {
-                id
-                title
-                url
-              }
-            }
-          }
           location {
             location
           }
