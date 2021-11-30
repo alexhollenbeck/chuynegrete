@@ -55,8 +55,10 @@ export const richTextOptions = {
     [BLOCKS.EMBEDDED_ENTRY]: (node, children) => {
       const target = node.data.target
       if (target && target.internal.type === 'ContentfulVideo') {
-        const seconds = target.seconds
-        const url = seconds ? target.url + '?start=' + seconds : target.url
+        const seconds = target.startTimeSeconds
+        const videoId = target.url.split('?v=')[1]
+        const baseUrl = `https://www.youtube.com/embed/${videoId}`
+        const url = seconds ? baseUrl + '?start=' + seconds : baseUrl
         return (
           <iframe
             width='560'

@@ -121,6 +121,7 @@ export const pageQuery = graphql`
                 title
                 url
                 contentful_id
+                startTimeSeconds
                 internal {
                   type
                 }
