@@ -1,5 +1,7 @@
 export const formatDate = (date: string) => {
-  const [month, day, year] = date.split('-')
-  const postDateFormatted = `${month}/${day}/${year}`
-  return postDateFormatted
+  return new Date(date).toLocaleDateString('en-us', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
 }

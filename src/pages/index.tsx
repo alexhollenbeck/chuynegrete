@@ -11,6 +11,7 @@ import {
   Display,
   Label,
   LabelLarge,
+  LabelTiny,
   LabelXL,
   Lead,
   Paragraph,
@@ -19,12 +20,13 @@ import {
   Title,
   TitleLarge,
   TitleSmall,
-  TitleXL
+  TitleXL,
+  TitleXS
 } from '../components/Typography'
 import { graphql, Link } from 'gatsby'
 import { Colors } from '../utilities/Colors'
 import { Breakpoints, isSmall } from '../utilities/Breakpoints'
-import { formatDate } from '../utilities/Functions'
+import { formatDate, formatDateLong } from '../utilities/Functions'
 import { IArticle, IPostPreview } from '../utilities/Interfaces'
 import LazyLoad from 'react-lazyload'
 import { PostList } from '../components/blocks/PostList'
@@ -53,8 +55,17 @@ const ArticleTextWrapper = styled.div`
   width: 50%;
   padding-left: 8px;
   box-sizing: border-box;
+  ${TitleXS} {
+    margin-top: 8px;
+  }
 `
-const Article = ({ title, publication, link, thumbnailImage }: IArticle) => (
+const Article = ({
+  title,
+  publication,
+  link,
+  thumbnailImage,
+  date
+}: IArticle) => (
   <ArticleWrapper href={link} target='_blank' rel='noreferrer'>
     <ArticleImageWrapper>
       <RectangularImage src={thumbnailImage.file.url} />
@@ -62,9 +73,10 @@ const Article = ({ title, publication, link, thumbnailImage }: IArticle) => (
 
     <ArticleTextWrapper>
       <Label>{publication}</Label>
-      <TitleSmall color={Colors.primary} fontSizeMobile={0.875}>
+      <LabelTiny>{formatDate(date)}</LabelTiny>
+      <TitleXS color={Colors.primary} fontSizeMobile={0.875}>
         {title}
-      </TitleSmall>
+      </TitleXS>
     </ArticleTextWrapper>
   </ArticleWrapper>
 )
@@ -252,6 +264,7 @@ export const query = graphql`
           title
           link
           publication
+          date(formatString: "MM-DD-YY")
           thumbnailImage {
             file {
               url
