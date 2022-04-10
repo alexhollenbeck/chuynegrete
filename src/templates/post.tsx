@@ -12,11 +12,12 @@ import {
   ParagraphLarge,
   Title
 } from '../components/Typography'
-import { PostList, RectangularImage } from '../pages'
+import { RectangularImage } from '../pages'
 import { isLarge } from '../utilities/Breakpoints'
 import { formatDate } from '../utilities/Functions'
 import { Colors } from '../utilities/Colors'
 import { richTextOptions } from '../utilities/richText'
+import { PostList } from '../components/blocks/PostList'
 
 const PostSectionWrapper = styled(ResponsiveSectionWrapper)`
   ${Display}, ${Title} {

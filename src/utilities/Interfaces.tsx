@@ -254,3 +254,17 @@ export interface IArticle {
   thumbnailImage: { description: string; file: { url: string } }
   date: string
 }
+
+export interface IPostPreview {
+  title: string
+  date: string
+  urlSlug: string
+  summary?: {
+    summary: string
+  }
+  featuredImage: {
+    file: {
+      url: string
+    }
+  }
+}

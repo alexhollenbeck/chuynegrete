@@ -32,3 +32,15 @@ export const ResponsiveSectionWrapper = styled(SectionWrapper as any)<{
       : null}
   `}
 `
+export const Container = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1280px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+  @media (min-width: ${Breakpoints.md}px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+`

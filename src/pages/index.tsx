@@ -1,8 +1,11 @@
-import { Container, Grid } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import styled, { css } from 'styled-components'
 import * as React from 'react'
 import Layout from '../components/partials/Layout'
-import { ResponsiveSectionWrapper } from '../components/partials/Section'
+import {
+  Container,
+  ResponsiveSectionWrapper
+} from '../components/partials/Section'
 import SEO from '../components/partials/SEO'
 import {
   Display,
@@ -22,7 +25,9 @@ import { graphql, Link } from 'gatsby'
 import { Colors } from '../utilities/Colors'
 import { Breakpoints, isSmall } from '../utilities/Breakpoints'
 import { formatDate } from '../utilities/Functions'
-import { IArticle } from '../utilities/Interfaces'
+import { IArticle, IPostPreview } from '../utilities/Interfaces'
+import LazyLoad from 'react-lazyload'
+import { PostList } from '../components/blocks/PostList'
 
 export const RectangularImage = styled.div<{
   src: string
@@ -36,40 +41,38 @@ export const RectangularImage = styled.div<{
   box-shadow: rgb(0 0 0 / 10%) 0px 2px 6px;
   border-radius: 0.5rem;
 `
-
+const ArticleWrapper = styled.a`
+  display: flex;
+`
+const ArticleImageWrapper = styled.div`
+  width: 50%;
+  padding-right: 8px;
+  box-sizing: border-box;
+`
+const ArticleTextWrapper = styled.div`
+  width: 50%;
+  padding-left: 8px;
+  box-sizing: border-box;
+`
 const Article = ({ title, publication, link, thumbnailImage }: IArticle) => (
-  <a href={link} target='_blank' rel='noreferrer'>
-    <Grid container spacing={2}>
-      <Grid item xs={6} sm={6} md={6} lg={6}>
-        <RectangularImage src={thumbnailImage.file.url} />
-      </Grid>
-      <Grid item xs={6} sm={6} md={6} lg={6}>
-        <Label>{publication}</Label>
-        <TitleSmall color={Colors.primary} fontSizeMobile={0.875}>
-          {title}
-        </TitleSmall>
-      </Grid>
-    </Grid>
-  </a>
+  <ArticleWrapper href={link} target='_blank' rel='noreferrer'>
+    <ArticleImageWrapper>
+      <RectangularImage src={thumbnailImage.file.url} />
+    </ArticleImageWrapper>
+
+    <ArticleTextWrapper>
+      <Label>{publication}</Label>
+      <TitleSmall color={Colors.primary} fontSizeMobile={0.875}>
+        {title}
+      </TitleSmall>
+    </ArticleTextWrapper>
+  </ArticleWrapper>
 )
 const IndexHeadline = styled.div`
   ${TitleLarge} {
     margin-top: 1rem;
   }
 `
-interface IPostPreview {
-  title: string
-  date: string
-  urlSlug: string
-  summary?: {
-    summary: string
-  }
-  featuredImage: {
-    file: {
-      url: string
-    }
-  }
-}
 const IndexHeaderWrapper = styled.div`
   width: 100%;
   padding: 32px;
@@ -120,43 +123,6 @@ const AllPostsSectionWrapper = styled(ResponsiveSectionWrapper)`
     margin-bottom: 2rem;
   }
 `
-
-const PostCardWrapper = styled.div`
-  padding: 1rem;
-  ${Label} {
-    margin-top: 1rem;
-  }
-  ${Title}, ${Label} {
-    transition: color 0.5s;
-  }
-  &:hover {
-    ${Title}, ${Label} {
-      color: ${Colors.primary};
-    }
-  }
-`
-
-export const PostCard = ({ post }: { post: IPostPreview }) => {
-  const { title, date, urlSlug, featuredImage } = post
-  return (
-    <PostCardWrapper>
-      <Link to={`/posts/${urlSlug}`}>
-        <RectangularImage src={featuredImage.file.url} />
-        <Label>{formatDate(date)}</Label>
-        <Title>{title}</Title>
-      </Link>
-    </PostCardWrapper>
-  )
-}
-export const PostList = ({ posts }: { posts: IPostPreview[] }) => (
-  <Grid container spacing={4}>
-    {posts.map((post, index) => (
-      <Grid item xs={12} sm={12} md={6} lg={4} key={`post-${index}`}>
-        <PostCard post={post} />
-      </Grid>
-    ))}
-  </Grid>
-)
 const ArticleListItem = styled.li`
   padding: 2rem 0;
   &:not(:first-of-type) {
@@ -210,12 +176,14 @@ const IndexPage = ({ data }: { data: any }) => {
           </HeaderContentWrapper>
         </Container>
       </ResponsiveSectionWrapper>
-      <AllPostsSectionWrapper>
-        <Container>
-          <LabelXL>All posts</LabelXL>
-          <PostList posts={posts} />
-        </Container>
-      </AllPostsSectionWrapper>
+      <LazyLoad once height={1322}>
+        <AllPostsSectionWrapper>
+          <Container>
+            <LabelXL>All posts</LabelXL>
+            <PostList posts={posts} />
+          </Container>
+        </AllPostsSectionWrapper>
+      </LazyLoad>
     </Layout>
   )
 }
