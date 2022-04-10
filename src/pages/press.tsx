@@ -72,7 +72,7 @@ const PressPage = ({ data }: { data: any }) => {
   return (
     <Layout>
       <SEO title='Remembering Chuy Negrete | Press' />
-      <AllArticlesSectionWrapper>
+      <AllArticlesSectionWrapper paddingLarge='1rem 0 5rem'>
         <Container>
           <Nav />
           <TitleXL>Press</TitleXL>
