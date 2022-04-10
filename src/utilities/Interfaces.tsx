@@ -246,3 +246,11 @@ export interface INavigation {
     }
   }[]
 }
+
+export interface IArticle {
+  title: string
+  publication: string
+  link: string
+  thumbnailImage: { description: string; file: { url: string } }
+  date: string
+}

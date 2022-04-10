@@ -22,6 +22,7 @@ import { graphql, Link } from 'gatsby'
 import { Colors } from '../utilities/Colors'
 import { Breakpoints, isSmall } from '../utilities/Breakpoints'
 import { formatDate } from '../utilities/Functions'
+import { IArticle } from '../utilities/Interfaces'
 
 export const RectangularImage = styled.div<{
   src: string
@@ -36,17 +37,7 @@ export const RectangularImage = styled.div<{
   border-radius: 0.5rem;
 `
 
-const Article = ({
-  title,
-  publication,
-  link,
-  thumbnailImage
-}: {
-  title: string
-  publication: string
-  link: string
-  thumbnailImage: { description: string; file: { url: string } }
-}) => (
+const Article = ({ title, publication, link, thumbnailImage }: IArticle) => (
   <a href={link} target='_blank' rel='noreferrer'>
     <Grid container spacing={2}>
       <Grid item xs={6} sm={6} md={6} lg={6}>
@@ -83,7 +74,7 @@ const IndexHeaderWrapper = styled.div`
   ${RectangularImage} {
     margin-top: 2rem;
   }
-  ${TitleXL}, ${Paragraph}, ${StyledLinkWrapper} {
+  ${Paragraph}, ${StyledLinkWrapper}, ${Label} {
     display: block;
     margin-top: 1rem;
   }
@@ -107,6 +98,7 @@ const IndexHeader = ({
     </IndexHeadline>
     <a href={`/posts/${featuredPost.urlSlug}`}>
       <RectangularImage src={featuredPost.featuredImage.file.url} />
+      <Label>Featured</Label>
       <TitleXL>{featuredPost.title}</TitleXL>
       {featuredPost.summary && (
         <Paragraph>{featuredPost.summary.summary}</Paragraph>
@@ -168,6 +160,7 @@ const ArticleListItem = styled.li`
 const IndexPage = ({ data }: { data: any }) => {
   const headline = data.headline.edges[0].node
   const featuredPost = data.featuredPost.edges[0].node
+  console.log(featuredPost)
   const articles = data.articles.edges.map((edge) => edge.node)
   const posts = data.posts.edges.map((edge) => edge.node)
   return (
@@ -188,6 +181,9 @@ const IndexPage = ({ data }: { data: any }) => {
                   </ArticleListItem>
                 ))}
               </ul>
+              <StyledLink color={Colors.primary} to='/press'>
+                See all articles &rarr;
+              </StyledLink>
             </Grid>
           </Grid>
         </Container>
@@ -257,7 +253,10 @@ export const query = graphql`
         }
       }
     }
-    articles: allContentfulPressArticle(sort: { fields: date, order: DESC }) {
+    articles: allContentfulPressArticle(
+      sort: { fields: date, order: DESC }
+      limit: 3
+    ) {
       edges {
         node {
           title
