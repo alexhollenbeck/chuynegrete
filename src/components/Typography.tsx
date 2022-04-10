@@ -363,6 +363,9 @@ export const ExternalLinkXS = styled(ExternalLink)`
 
 export const TitleXL = styled(TypographyComponent as any).attrs((props) => ({
   as: props.as ? props.as : 'h2',
+  fontSizeMobile: props.fontSizeMobile
+    ? props.fontSizeMobile
+    : Typescale.titleLarge,
   defaultStyles: {
     color: Colors.text,
     fontFamily: FontFamily.brandPrimary,
