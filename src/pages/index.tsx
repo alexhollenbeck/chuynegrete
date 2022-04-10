@@ -71,6 +71,12 @@ interface IPostPreview {
   }
 }
 const IndexHeaderWrapper = styled.div`
+  width: 100%;
+  padding: 32px;
+  box-sizing: border-box;
+  @media (min-width: ${Breakpoints.md}px) {
+    width: 58.3333%;
+  }
   ${RectangularImage} {
     margin-top: 2rem;
   }
@@ -157,10 +163,28 @@ const ArticleListItem = styled.li`
     border-top: 1px solid ${Colors.gray30};
   }
 `
+const HeaderContentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  flex-direction: column;
+  margin: -32px;
+  width: calc(100% + 64px);
+  @media (min-width: ${Breakpoints.md}px) {
+    flex-direction: row;
+  }
+`
+const HeaderPressWrapper = styled.div`
+  width: 100%;
+  padding: 32px;
+  box-sizing: border-box;
+  @media (min-width: ${Breakpoints.sm}px) {
+    width: 41.6667%;
+  }
+`
 const IndexPage = ({ data }: { data: any }) => {
   const headline = data.headline.edges[0].node
   const featuredPost = data.featuredPost.edges[0].node
-  console.log(featuredPost)
   const articles = data.articles.edges.map((edge) => edge.node)
   const posts = data.posts.edges.map((edge) => edge.node)
   return (
@@ -168,11 +192,9 @@ const IndexPage = ({ data }: { data: any }) => {
       <SEO title='Remembering Chuy Negrete' />
       <ResponsiveSectionWrapper paddingSmall='3rem 0 2rem'>
         <Container>
-          <Grid container spacing={8}>
-            <Grid item xs={12} sm={12} md={7} lg={7}>
-              <IndexHeader headline={headline} featuredPost={featuredPost} />
-            </Grid>
-            <Grid item xs={12} sm={12} md={5} lg={5}>
+          <HeaderContentWrapper>
+            <IndexHeader headline={headline} featuredPost={featuredPost} />
+            <HeaderPressWrapper>
               <LabelLarge>Press</LabelLarge>
               <ul>
                 {articles.map((article, index) => (
@@ -184,8 +206,8 @@ const IndexPage = ({ data }: { data: any }) => {
               <StyledLink color={Colors.primary} to='/press'>
                 See all articles &rarr;
               </StyledLink>
-            </Grid>
-          </Grid>
+            </HeaderPressWrapper>
+          </HeaderContentWrapper>
         </Container>
       </ResponsiveSectionWrapper>
       <AllPostsSectionWrapper>
